@@ -19,6 +19,7 @@
     <Folder Include="Infrastructure\" />
     <Folder Include="Extensions\" />
     <Folder Include="wwwroot\img\" />
+    <Folder Include="Views\Preview\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Logo.png" />

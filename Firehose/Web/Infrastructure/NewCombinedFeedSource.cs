@@ -18,7 +18,7 @@ using System.Xml;
 
 namespace Firehose.Web.Infrastructure
 {
-	public class NewCombinedFeedSource
+    public class NewCombinedFeedSource
     {
         private static HttpClient httpClient;
         private static AsyncRetryPolicy retryPolicy;
