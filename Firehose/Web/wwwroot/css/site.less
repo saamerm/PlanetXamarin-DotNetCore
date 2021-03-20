@@ -1,29 +1,30 @@
-﻿/* This is a special digital tint in our official swatch */
-/* Alter the colors below */
-/* These are the values for the Xamarin look */
-.syndicationItem .syndicationItemTitle a {
-    color: #000;
-    font-weight: 100;
-    text-decoration: none;
-}
+﻿@import "variables.less";
 
-.syndicationItem h2.syndicationItemDate {
-    color: #7d8c8d;
-    font-size: 18px;
-    margin: 0px;
-}
-
-.syndicationItem h2.syndicationItemByLine {
-    margin: 0;
-}
-
-.syndicationItem .syndicationItemContent {
-    margin: 20px 0;
-}
-
-    .syndicationItem .syndicationItemContent p {
-        margin: 20px 0;
+.syndicationItem {
+    .syndicationItemTitle a {
+        color: @black;
+        font-weight: 100;
+        text-decoration: none;
     }
+
+    h2.syndicationItemDate {
+        color: @lighttext;
+        font-size: 18px;
+        margin: 0px;
+    }
+
+    h2.syndicationItemByLine {
+        margin: 0;
+    }
+
+    .syndicationItemContent {
+        margin: 20px 0;
+
+        p {
+            margin: 20px 0;
+        }
+    }
+}
 
 .body-content {
     padding-left: 15px;
@@ -31,7 +32,7 @@
 }
 
 .businessCard {
-    background-color: #fff;
+    background-color: @white;
     border: 1px solid #ccc;
     box-shadow: 10px 10px 10px #ccc;
     box-sizing: border-box;
@@ -41,14 +42,13 @@
     margin: 15px;
     padding: 1em;
     width: 420px;
-}
 
-    .businessCard p {
+    p {
         margin: 0;
         margin-bottom: 1em;
     }
 
-    .businessCard .mugShot {
+    .mugShot {
         float: right;
         height: 100px;
         overflow: hidden;
@@ -57,124 +57,130 @@
         background-size: contain;
     }
 
-    .businessCard .twitter-follow-button {
+    .twitter-follow-button {
         clear: both;
         float: right;
         margin-top: 5px;
     }
 
-    .businessCard .contactDetail {
+    .contactDetail {
         margin-right: 1em;
     }
+}
 
 .profileCard {
     padding: 20px;
     position: relative;
-}
 
-    .profileCard.active .profileCardWrapper {
-        background-color: #d9d9d9;
+    &.active {
+        .profileCardWrapper {
+            background-color: darken(@white, 15%);
+        }
     }
 
-    .profileCard .profileCardWrapper {
-        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
-        background-color: #fff;
+    .profileCardWrapper {
+        box-shadow: 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12), 0 3px 5px -1px rgba(0,0,0,.2);
+        background-color: @white;
         padding: 20px;
         padding-top: 50px;
         word-wrap: break-word;
         text-overflow: ellipsis;
         text-align: center;
-    }
 
-        .profileCard .profileCardWrapper .name {
+        .name {
             margin: 10px 0 0 0;
-            color: #b455b6;
+            color: @primary;
             font-size: 22px;
         }
 
-        .profileCard .profileCardWrapper .description {
+        .description {
             min-height: 80px;
         }
 
-        .profileCard .profileCardWrapper .twitter a {
-            color: #7d8c8d;
+        .twitter a {
+            color: @lighttext;
             font-size: 13px;
         }
 
-        .profileCard .profileCardWrapper .website a {
+        .website a {
             font-size: 13px;
             word-wrap: break-word;
             text-overflow: ellipsis;
         }
 
-        .profileCard .profileCardWrapper .location {
-            color: #7d8c8d;
+        .location {
+            color: @lighttext;
             font-size: 13px;
             margin: 20px 0 0 0;
         }
+    }
 
-    .profileCard .mugShotBorder {
+    .mugShotBorder {
         background-image: url('../img/card-background.png');
         background-size: 140%;
-        color: #fff;
+        color: @white;
         height: 60px;
         padding-top: 10px;
         clear: both;
     }
 
-    .profileCard .profileCardLocation {
+    .profileCardLocation {
         font-size: 14px;
         margin-top: -40px;
         margin-left: 120px;
     }
 
-    .profileCard .profileCardSocial {
+    .profileCardSocial {
         float: right;
         font-size: 20px;
         line-height: 50px;
         vertical-align: middle;
         margin-top: -25px;
         margin-right: 20px;
+
+        a {
+            color: @white;
+        }
     }
 
-        .profileCard .profileCardSocial a {
-            color: #fff;
-        }
-
-    .profileCard .mugShot {
+    .mugShot {
         position: absolute;
         left: 50%;
         border-radius: 50%;
-        border: 3px solid #fff;
+        border: 3px solid @white;
         width: 100px;
         height: 100px;
         margin-top: 10px;
         margin-left: -50px;
-        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12), 0 3px 5px -1px rgba(0,0,0,.2);
     }
+}
 
 #authorMap {
     width: 100%;
     height: 490px;
     margin-top: -50px;
     margin-bottom: 10px;
-}
 
-    #authorMap img[src*="https://www.gravatar.com/avatar/"] {
+    img[src*="https://www.gravatar.com/avatar/"] {
         border-radius: 25px;
     }
+}
 
 .featuredbadge {
     max-width: 200px;
 }
 
-.leader .col-md-4 {
-    margin: 30px 0;
+.leader {
+    .col-md-4 {
+        margin: 30px 0;
+    }
+
+    i.fa {
+        font-size: 40px;
+    }
 }
 
-.leader i.fa {
-    font-size: 40px;
-}
 /* No scrolling for collapsed menu */
 .navbar-collapse.in {
     overflow: hidden;
