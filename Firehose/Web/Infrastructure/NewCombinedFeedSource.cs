@@ -176,7 +176,7 @@ namespace Firehose.Web.Infrastructure
                 new Uri(ConfigurationManager.AppSettings["BaseUrl"] ?? "https://planetxamarin.com"),
                 numberOfItems.HasValue ? orderedItems.Take(numberOfItems.Value) : orderedItems)
             {
-                ImageUrl = new Uri(ConfigurationManager.AppSettings["RssFeedImageUrl"] ?? "https://planetxamarin.com/Content/Logo.png"),
+                ImageUrl = new Uri(ConfigurationManager.AppSettings["RssFeedImageUrl"] ?? "https://planetxamarin.com/Logo.png"),
                 Copyright = new TextSyndicationContent("The copyright for each post is retained by its author."),
                 Language = languageCode,
 				LastUpdatedTime = DateTimeOffset.UtcNow

@@ -18,7 +18,12 @@
     <Folder Include="Infrastructure\" />
     <Folder Include="Extensions\" />
     <Folder Include="wwwroot\img\" />
-    <Folder Include="wwwroot\img\icons\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Logo.png" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
