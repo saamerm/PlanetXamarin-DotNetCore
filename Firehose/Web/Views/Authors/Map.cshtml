@@ -1,0 +1,90 @@
+﻿@using Firehose.Web.Infrastructure
+@using Firehose.Web.Extensions
+@using Newtonsoft.Json
+
+@model Firehose.Web.Infrastructure.IAmACommunityMember[]
+
+<div id="authorMap"></div>
+
+<script type='text/javascript'>
+    var map, selectedAuthor = null;
+    var markerRadius = 20;
+
+    function loadMap() {
+        var map = new google.maps.Map(document.getElementById('authorMap'),
+        {
+            zoom: 2,
+            center: { lat: 34.88593094075314, lng: -10.732421875 },
+            streetViewControl: false,
+            disableDefaultUI: true
+        });
+        window.map = map;
+
+        var markers = getMarkers();
+        var markerCluster = new MarkerClusterer(map, markers,
+            {
+                imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
+                gridSize: 20
+            });
+    }
+
+    function getMarkers() {
+        var markers = [];
+        @foreach (var member in Model)
+        {
+            // Using JSON Settings because of this recommendation https://stackoverflow.com/a/50336590/11104068
+            var jsonSettings = new JsonSerializerSettings {StringEscapeHandling = StringEscapeHandling.EscapeHtml};
+
+            var id = Html.Raw(JsonConvert.SerializeObject(member.GetType().Name, jsonSettings));
+            var name = Html.Raw(JsonConvert.SerializeObject(member.FirstName + " " + member.LastName, jsonSettings));
+
+            var gravatar = Html.Raw(JsonConvert.SerializeObject(member.EmailAddress.Trim().ToLowerInvariant().ToMd5Hash().ToLowerInvariant(), jsonSettings));
+
+            if (!string.IsNullOrWhiteSpace(member.GravatarHash))
+            {
+                gravatar = Html.Raw(JsonConvert.SerializeObject(member.GravatarHash, jsonSettings));
+            }
+
+            @:var marker = getMarker(@id, @JsonConvert.SerializeObject(@member.Position.Lat), @JsonConvert.SerializeObject(member.Position.Lng, jsonSettings), @name, @gravatar);
+                                    @:markers.push(marker);
+                                }
+        return markers;
+    }
+
+    function getMarker(id, lat, lng, name, gravatarHash) {
+        var size = markerRadius * 2;
+        var radius = markerRadius;
+        var pos = { lat: lat, lng: lng };
+        var marker = new google.maps.Marker({
+            position: pos,
+            title: name,
+            shape: { coords: [radius, radius, radius], type: 'circle' },
+            icon: {
+                url: 'https://www.gravatar.com/avatar/' + gravatarHash + '.jpg?s=' + size + '&d=mm',
+                size: new google.maps.Size(size, size)
+            },
+            optimized: false
+        });
+
+        marker.addListener('click', function () {
+            $('.live-search-box').val('');
+
+            $('.profileCard').each(function() {
+                $(this).show();
+            });
+
+            if (selectedAuthor) {
+                selectedAuthor.removeClass('active');
+            }
+
+            selectedAuthor = $('#' + id).addClass('active');
+            $('html, body').animate({
+                scrollTop: selectedAuthor.offset().top - 75
+            }, 1000);
+        });
+
+        return marker;
+    }
+</script>
+<script src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7Vm-PymDAlVK3X7rPNKECr5aQLVQqFoE&callback=loadMap"></script>
