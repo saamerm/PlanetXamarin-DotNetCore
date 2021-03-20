@@ -2,7 +2,6 @@
 @using MvcNavigationHelpers
 @using Firehose.Web.Infrastructure
 @model IAmACommunityMember[]
-
 @{
   ViewData["Title"] = "Home Page";
   Layout = "~/Views/Shared/_ContainerLayout.cshtml";
@@ -62,8 +61,8 @@
 <hr />
 <h1>Xamarin Podcasts, Shows, Newsletters & Open-source Software</h1>
 <p>
-    @*@foreach (var member in Model.Where(m => m is IAmAPodcast || m is IAmANewsletter || m is IAmAFrameworkForXamarin).ToArray())*@
+    @foreach (var member in Model.Where(m => m is IAmAPodcast || m is IAmANewsletter || m is IAmAFrameworkForXamarin).ToArray())
     {
-        @*Html.RenderPartial("PodcastCard", member);*@
+        await Html.RenderPartialAsync("PodcastCard", member);
     }
 </p>
