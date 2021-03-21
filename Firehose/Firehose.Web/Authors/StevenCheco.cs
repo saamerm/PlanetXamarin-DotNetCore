@@ -1,12 +1,10 @@
-﻿using Firehose.Web.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Firehose.Web.Infrastructure;
 
 namespace Firehose.Web.Authors
 {
-	public class StevenCheco : IAmACommunityMember
+  public class StevenCheco : IAmACommunityMember
 	{
 		public string FirstName => "Steven";
 

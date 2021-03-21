@@ -1,8 +1,7 @@
-﻿using Elmah;
+﻿//using Elmah;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Web;
 
 namespace Firehose.Web.Infrastructure
 {
@@ -21,12 +20,12 @@ namespace Firehose.Web.Infrastructure
                     var annotatedException = new Exception(contextualMessage, ex);
 
                     // TODO: Uncomment this. Currently PlanetXamarin.com gets this from the Web.config file
-                    ErrorLog.Default.Log(new Error(annotatedException));
+                    //ErrorLog.Default.Log(new Error(annotatedException));
                 }
                 else
                 {
                     // TODO: Uncomment this. Currently PlanetXamarin.com gets this from the Web.config file
-                    ErrorLog.Default.Log(new Error(ex));
+                    //ErrorLog.Default.Log(new Error(ex));
                 }
             }
             catch (Exception)

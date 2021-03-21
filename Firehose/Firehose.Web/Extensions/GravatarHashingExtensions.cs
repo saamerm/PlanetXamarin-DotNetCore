@@ -1,8 +1,6 @@
 ﻿using Firehose.Web.Infrastructure;
 using System.Configuration;
-using System.Web;
-using System.Security.Cryptography;
-using System.Text;
+using System.Net;
 
 namespace Firehose.Web.Extensions
 {
@@ -16,7 +14,7 @@ namespace Firehose.Web.Extensions
             if (string.IsNullOrWhiteSpace(hash))
                 hash = member.EmailAddress.Trim().ToLowerInvariant().ToMd5Hash().ToLowerInvariant();
 
-            var defaultImage = HttpUtility.UrlEncode(ConfigurationManager.AppSettings["DefaultGravatarImage"]);
+            var defaultImage = WebUtility.UrlEncode(ConfigurationManager.AppSettings["DefaultGravatarImage"]);
             return $"//www.gravatar.com/avatar/{hash}.jpg?s={size}&d={defaultImage}";
         }
     }
