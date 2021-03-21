@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Xml;
@@ -25,12 +26,23 @@ namespace Firehose.Web.Infrastructure
 		private static AsyncCachePolicy cachePolicy;
 
         public IEnumerable<IAmACommunityMember> Tamarins { get; }
+        private string[] _interfaceNames =
+        {
+            nameof(IAmACommunityMember),
+            nameof(IWorkAtXamarinOrMicrosoft),
+            nameof(IAmAXamarinMVP),
+            nameof(IAmAMicrosoftMVP),
+            nameof(IAmAPodcast),
+            nameof(IAmANewsletter),
+            nameof(IAmAFrameworkForXamarin),
+            nameof(IAmAYoutuber)
+        };
 
         public NewCombinedFeedSource(IEnumerable<IAmACommunityMember> tamarins)
         {
             EnsureHttpClient();
 
-            Tamarins = tamarins;
+            Tamarins = GetAuthors();
 
 			if (retryPolicy == null)
 			{
@@ -46,7 +58,22 @@ namespace Firehose.Web.Infrastructure
 			}
         }
 
-		private void OnCacheError(Context arg1, string arg2, Exception arg3)
+        private IEnumerable<IAmACommunityMember> GetAuthors()
+        {
+            var assembly = Assembly.GetAssembly(typeof(IAmACommunityMember));
+
+            var types = assembly.GetTypes();
+            var authorTypes = types.Where(t => typeof(IAmACommunityMember).IsAssignableFrom(t) &&
+                !_interfaceNames.Contains(t.Name));
+
+            foreach (var authorType in authorTypes)
+            {
+                var author = (IAmACommunityMember)Activator.CreateInstance(authorType);
+                yield return author;
+            }
+        }
+
+        private void OnCacheError(Context arg1, string arg2, Exception arg3)
 		{
 			Logger.Error(arg3, $"Failed caching item: {arg1} - {arg2}");
 		}
@@ -76,11 +103,11 @@ namespace Firehose.Web.Infrastructure
 				tamarins = Tamarins.Where(t => CultureInfo.CreateSpecificCulture(t.FeedLanguageCode).Name == languageCode);
 			}
 
-			var feedTasks = tamarins.SelectMany(t => TryReadFeeds(t, GetFilterFunction(t)));
+              var feedTasks = tamarins.Select(async t => await TryReadFeed(t, t.FeedUris.FirstOrDefault().AbsoluteUri, GetFilterFunction(t)));
 
-			var syndicationItems = await Task.WhenAll(feedTasks).ConfigureAwait(false);
-			var combinedFeed = GetCombinedFeed(syndicationItems.SelectMany(f => f), languageCode, tamarins, numberOfItems);
-			return combinedFeed;
+              var syndicationItems = await Task.WhenAll(feedTasks).ConfigureAwait(false);
+			        var combinedFeed = GetCombinedFeed(syndicationItems.SelectMany(f => f), languageCode, tamarins, numberOfItems);
+			        return combinedFeed;
 		}
 
         public Task<SyndicationFeed> LoadFeed(int? numberOfItems, string languageCode = "mixed")
@@ -88,16 +115,11 @@ namespace Firehose.Web.Infrastructure
 			return cachePolicy.ExecuteAsync(context => LoadFeedInternal(numberOfItems, languageCode), new Context($"feed{numberOfItems}{languageCode}"));
         }
 
-        private IEnumerable<Task<IEnumerable<SyndicationItem>>> TryReadFeeds(IAmACommunityMember tamarin, Func<SyndicationItem, bool> filter)
-        {
-            return tamarin.FeedUris.Select(uri => TryReadFeed(tamarin, uri.AbsoluteUri, filter));
-        }
-
         private async Task<IEnumerable<SyndicationItem>> TryReadFeed(IAmACommunityMember tamarin, string feedUri, Func<SyndicationItem, bool> filter)
         {
             try
             {
-                return await retryPolicy.ExecuteAsync(context => ReadFeed(feedUri, filter), new Context(feedUri)).ConfigureAwait(false);
+                return await retryPolicy.ExecuteAsync(async context => await ReadFeed(feedUri, filter), new Context(feedUri)).ConfigureAwait(false);
             }
             catch (FeedReadFailedException ex)
             {
