@@ -31,8 +31,6 @@ namespace Firehose.Web.Controllers
         {
             _logger = logger;
             _members = GetAuthors();
-            var random = new Random();
-            _members = _members.OrderBy(r => random.Next()).ToArray();
         }
 
         private IEnumerable<IAmACommunityMember> GetAuthors()
