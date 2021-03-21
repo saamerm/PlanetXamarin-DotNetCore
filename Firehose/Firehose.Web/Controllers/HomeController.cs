@@ -15,7 +15,7 @@ namespace Firehose.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IEnumerable<IAmACommunityMember> _members;
-    	private string[] _interfaceNames =
+        private string[] _interfaceNames =
 		{
 			nameof(IAmACommunityMember),
 			nameof(IWorkAtXamarinOrMicrosoft),
